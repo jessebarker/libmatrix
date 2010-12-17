@@ -16,6 +16,8 @@
 #include <iomanip>
 #include "vec.h"
 
+namespace LibMatrix
+{
 // Proxy class for providing the functionality of a doubly-dimensioned array
 // representation of matrices.  Each matrix class defines its operator[]
 // to return an ArrayProxy.  The ArrayProxy then returns the appropriate item
@@ -793,5 +795,5 @@ mat4 perspective(float fovy, float aspect, float zNear, float zFar);
 mat4 lookAt(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ);
 
 } // namespace Mat4
-
+} // namespace LibMatrix
 #endif // MAT_H_

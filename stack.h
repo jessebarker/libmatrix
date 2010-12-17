@@ -15,6 +15,8 @@
 #include <vector>
 #include "mat.h"
 
+namespace LibMatrix
+{
 //
 // Simple matrix stack implementation suitable for tracking OpenGL matrix
 // state.  Default construction puts an identity matrix on the top of the 
@@ -98,5 +100,7 @@ public:
         *this *= Mat4::lookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
     }
 };
+
+} // namespace LibMatrix
 
 #endif // STACK_H_

@@ -15,6 +15,8 @@
 #include <iostream> // only needed for print() functions...
 #include <math.h>
 
+namespace LibMatrix
+{
 template<typename T>
 class tvec2
 {
@@ -492,5 +494,7 @@ typedef tvec4<unsigned int> uvec4;
 typedef tvec2<bool> bvec2;
 typedef tvec3<bool> bvec3;
 typedef tvec4<bool> bvec4;
+
+} // namespace LibMatrix
 
 #endif // VEC_H_

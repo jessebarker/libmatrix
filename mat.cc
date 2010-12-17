@@ -12,6 +12,8 @@
 #include <math.h>
 #include "mat.h"
 
+namespace LibMatrix
+{
 namespace Mat4
 {
 
@@ -167,3 +169,5 @@ mat4 lookAt(float eyeX, float eyeY, float eyeZ,
 }
 
 } // namespace Mat4
+
+} // namespace LibMatrix
