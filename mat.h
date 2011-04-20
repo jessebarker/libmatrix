@@ -69,10 +69,28 @@ public:
         m_[3] = 1;
     }
 
+    void transpose()
+    {
+        T tmp_val = m_[1];
+        m_[1] = m_[2];
+        m_[2] = tmp_val;
+    }
+
     void print() const
     {
-        std::cout << "| " << m_[0] << " " << m_[1] << " |" << std::endl;
-        std::cout << "| " << m_[2] << " " << m_[3] << " |" << std::endl;
+        static const int precision(6);
+        // row 0
+        std::cout << "| ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][0];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][1];
+        std::cout << " |" << std::endl;
+        // row 1
+        std::cout << "| ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][0];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][1];
+        std::cout << " |" << std::endl;
     }
 
     operator const T*() const { return &m_[0];}
@@ -244,11 +262,46 @@ public:
         m_[8] = 1;
     }
 
+    void transpose()
+    {
+        T tmp_val = m_[1];
+        m_[1] = m_[3];
+        m_[3] = tmp_val;
+        tmp_val = m_[2];
+        m_[2] = m_[6];
+        m_[6] = tmp_val;
+        tmp_val = m_[5];
+        m_[5] = m_[7];
+        m_[7] = tmp_val;
+    }
+
     void print() const
     {
-        std::cout << "| " << m_[0] << " " << m_[1] << " " << m_[2] << " |" << std::endl;
-        std::cout << "| " << m_[3] << " " << m_[4] << " " << m_[5] << " |" << std::endl;
-        std::cout << "| " << m_[6] << " " << m_[7] << " " << m_[8] << " |" << std::endl;
+        static const int precision(6);
+        // row 0
+        std::cout << "| ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][0];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][1];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][2];
+        std::cout << " |" << std::endl;
+        // row 1
+        std::cout << "| ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][0];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][1];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][2];
+        std::cout << " |" << std::endl;
+        // row 2
+        std::cout << "| ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][0];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][1];
+        std::cout << " ";
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][2];
+        std::cout << " |" << std::endl;
     }
 
     operator const T*() const { return &m_[0];}
@@ -476,48 +529,70 @@ public:
         m_[15] = 1;
     }
 
+    void transpose()
+    {
+        T tmp_val = m_[1];
+        m_[1] = m_[4];
+        m_[4] = tmp_val;
+        tmp_val = m_[2];
+        m_[2] = m_[8];
+        m_[8] = tmp_val;
+        tmp_val = m_[3];
+        m_[3] = m_[12];
+        m_[12] = tmp_val;
+        tmp_val = m_[6];
+        m_[6] = m_[9];
+        m_[9] = tmp_val;
+        tmp_val = m_[7];
+        m_[7] = m_[13];
+        m_[13] = tmp_val;
+        tmp_val = m_[11];
+        m_[11] = m_[14];
+        m_[14] = tmp_val;
+    }
+
     void print() const
     {
         static const int precision(6);
         // row 0
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][0];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][1];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][2];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][3];
         std::cout << " |" << std::endl;
         // row 1
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[4];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][0];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[5];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][1];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[6];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][2];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[7];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][3];
         std::cout << " |" << std::endl;
         // row 2
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[8];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][0];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[9];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][1];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[10];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][2];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[11];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][3];
         std::cout << " |" << std::endl;
         // row 3
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[12];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][0];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[13];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][1];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[14];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][2];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[15];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][3];
         std::cout << " |" << std::endl;
     }
 
