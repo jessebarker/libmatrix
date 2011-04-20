@@ -41,9 +41,11 @@ private:
 };
 
 
-// All matrix objects are represented row-centric (i.e. C/C++ style references
-// to the data appear as matrix[row][column]).  When using the raw data access
-// member to treat the data as a singly-dimensioned array, it must be transposed.
+// Programming interfaces to all matrix objects are represented row-centric 
+// (i.e. C/C++ style references to the data appear as matrix[row][column]).  
+// However, the internal data representation is column-major, so when using 
+// the raw data access member to treat the data as a singly-dimensioned array,
+// it does not have to be transposed.
 template<typename T>
 class tmat2
 {
