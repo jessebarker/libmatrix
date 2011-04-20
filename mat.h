@@ -22,7 +22,7 @@ namespace LibMatrix
 // representation of matrices.  Each matrix class defines its operator[]
 // to return an ArrayProxy.  The ArrayProxy then returns the appropriate item
 // from its operator[].
-template<typename T>
+template<typename T, unsigned int dimension>
 class ArrayProxy
 {
 public:
@@ -30,11 +30,11 @@ public:
     ~ArrayProxy() { data_ = 0; }
     T& operator[](int index)
     {
-        return data_[index];
+        return data_[index * dimension];
     }
     const T& operator[](int index) const
     {
-        return data_[index];
+        return data_[index * dimension];
     }
 private:
     T* data_;
@@ -137,14 +137,14 @@ public:
 
     tmat2& operator*=(const tmat2& rhs)
     {
-        T r0c0((m_[0] * rhs.m_[0]) + (m_[1] * rhs.m_[2]));
-        T r0c1((m_[0] * rhs.m_[1]) + (m_[1] * rhs.m_[3]));
-        T r1c0((m_[2] * rhs.m_[0]) + (m_[3] * rhs.m_[2]));
-        T r1c1((m_[2] * rhs.m_[1]) + (m_[3] * rhs.m_[3]));
-        m_[0] = r0c0;
-        m_[1] = r0c1;
-        m_[2] = r1c0;
-        m_[3] = r1c1;
+        T c0r0((m_[0] * rhs.m_[0]) + (m_[2] * rhs.m_[1]));
+        T c0r1((m_[1] * rhs.m_[0]) + (m_[3] * rhs.m_[1]));
+        T c1r0((m_[0] * rhs.m_[2]) + (m_[2] * rhs.m_[3]));
+        T c1r1((m_[1] * rhs.m_[2]) + (m_[3] * rhs.m_[3]));
+        m_[0] = c0r0;
+        m_[1] = c0r1;
+        m_[2] = c1r0;
+        m_[3] = c1r1;
         return *this;
     }
 
@@ -181,13 +181,13 @@ public:
         return tmat2(*this) /= rhs;
     }
 
-    ArrayProxy<T> operator[](int index)
+    ArrayProxy<T, 2> operator[](int index)
     {
-        return ArrayProxy<T>(&m_[index * 2]);
+        return ArrayProxy<T, 2>(&m_[index]);
     }
-    const ArrayProxy<T> operator[](int index) const
+    const ArrayProxy<T, 2> operator[](int index) const
     {
-        return ArrayProxy<T>(const_cast<T*>(&m_[index * 2]));
+        return ArrayProxy<T, 2>(const_cast<T*>(&m_[index]));
     }
 
 private:
@@ -363,24 +363,24 @@ public:
 
     tmat3& operator*=(const tmat3& rhs)
     {
-        T r0c0((m_[0] * rhs.m_[0]) + (m_[1] * rhs.m_[3]) + (m_[2] * rhs.m_[6]));
-        T r0c1((m_[0] * rhs.m_[1]) + (m_[1] * rhs.m_[4]) + (m_[2] * rhs.m_[7]));
-        T r0c2((m_[0] * rhs.m_[2]) + (m_[1] * rhs.m_[5]) + (m_[2] * rhs.m_[8]));
-        T r1c0((m_[3] * rhs.m_[0]) + (m_[4] * rhs.m_[3]) + (m_[5] * rhs.m_[6]));
-        T r1c1((m_[3] * rhs.m_[1]) + (m_[4] * rhs.m_[4]) + (m_[5] * rhs.m_[7]));
-        T r1c2((m_[3] * rhs.m_[2]) + (m_[4] * rhs.m_[5]) + (m_[5] * rhs.m_[8]));
-        T r2c0((m_[6] * rhs.m_[0]) + (m_[7] * rhs.m_[3]) + (m_[8] * rhs.m_[6]));
-        T r2c1((m_[6] * rhs.m_[1]) + (m_[7] * rhs.m_[4]) + (m_[8] * rhs.m_[7]));
-        T r2c2((m_[6] * rhs.m_[2]) + (m_[7] * rhs.m_[5]) + (m_[8] * rhs.m_[8]));
-        m_[0] = r0c0;
-        m_[1] = r0c1;
-        m_[2] = r0c2;
-        m_[3] = r1c0;
-        m_[4] = r1c1;
-        m_[5] = r1c2;
-        m_[6] = r2c0;
-        m_[7] = r2c1;
-        m_[8] = r2c2;
+        T c0r0((m_[0] * rhs.m_[0]) + (m_[3] * rhs.m_[1]) + (m_[6] * rhs.m_[2]));
+        T c0r1((m_[1] * rhs.m_[0]) + (m_[4] * rhs.m_[1]) + (m_[7] * rhs.m_[2]));
+        T c0r2((m_[2] * rhs.m_[0]) + (m_[5] * rhs.m_[1]) + (m_[8] * rhs.m_[2]));
+        T c1r0((m_[0] * rhs.m_[3]) + (m_[3] * rhs.m_[4]) + (m_[6] * rhs.m_[5]));
+        T c1r1((m_[1] * rhs.m_[3]) + (m_[4] * rhs.m_[4]) + (m_[7] * rhs.m_[5]));
+        T c1r2((m_[2] * rhs.m_[3]) + (m_[5] * rhs.m_[4]) + (m_[8] * rhs.m_[5]));
+        T c2r0((m_[0] * rhs.m_[6]) + (m_[3] * rhs.m_[7]) + (m_[6] * rhs.m_[8]));
+        T c2r1((m_[1] * rhs.m_[6]) + (m_[4] * rhs.m_[7]) + (m_[7] * rhs.m_[8]));
+        T c2r2((m_[2] * rhs.m_[6]) + (m_[5] * rhs.m_[7]) + (m_[8] * rhs.m_[8]));
+        m_[0] = c0r0;
+        m_[1] = c0r1;
+        m_[2] = c0r2;
+        m_[3] = c1r0;
+        m_[4] = c1r1;
+        m_[5] = c1r2;
+        m_[6] = c2r0;
+        m_[7] = c2r1;
+        m_[8] = c2r2;
         return *this;
     }
 
@@ -427,13 +427,13 @@ public:
         return tmat3(*this) /= rhs;
     }
 
-    ArrayProxy<T> operator[](int index)
+    ArrayProxy<T, 3> operator[](int index)
     {
-        return ArrayProxy<T>(&m_[index * 3]);
+        return ArrayProxy<T, 3>(&m_[index]);
     }
-    const ArrayProxy<T> operator[](int index) const
+    const ArrayProxy<T, 3> operator[](int index) const
     {
-        return ArrayProxy<T>(const_cast<T*>(&m_[index * 3]));
+        return ArrayProxy<T, 3>(const_cast<T*>(&m_[index]));
     }
 
 private:
@@ -676,38 +676,38 @@ public:
 
     tmat4& operator*=(const tmat4& rhs)
     {
-        T r0c0((m_[0] * rhs.m_[0]) + (m_[1] * rhs.m_[4]) + (m_[2] * rhs.m_[8]) + (m_[3] * rhs.m_[12]));
-        T r0c1((m_[0] * rhs.m_[1]) + (m_[1] * rhs.m_[5]) + (m_[2] * rhs.m_[9]) + (m_[3] * rhs.m_[13]));
-        T r0c2((m_[0] * rhs.m_[2]) + (m_[1] * rhs.m_[6]) + (m_[2] * rhs.m_[10]) + (m_[3] * rhs.m_[14]));
-        T r0c3((m_[0] * rhs.m_[3]) + (m_[1] * rhs.m_[7]) + (m_[2] * rhs.m_[11]) + (m_[3] * rhs.m_[15]));
-        T r1c0((m_[4] * rhs.m_[0]) + (m_[5] * rhs.m_[4]) + (m_[6] * rhs.m_[8]) + (m_[7] * rhs.m_[12]));
-        T r1c1((m_[4] * rhs.m_[1]) + (m_[5] * rhs.m_[5]) + (m_[6] * rhs.m_[9]) + (m_[7] * rhs.m_[13]));
-        T r1c2((m_[4] * rhs.m_[2]) + (m_[5] * rhs.m_[6]) + (m_[6] * rhs.m_[10]) + (m_[7] * rhs.m_[14]));
-        T r1c3((m_[4] * rhs.m_[3]) + (m_[5] * rhs.m_[7]) + (m_[6] * rhs.m_[11]) + (m_[7] * rhs.m_[15]));
-        T r2c0((m_[8] * rhs.m_[0]) + (m_[9] * rhs.m_[4]) + (m_[10] * rhs.m_[8]) + (m_[11] * rhs.m_[12]));
-        T r2c1((m_[8] * rhs.m_[1]) + (m_[9] * rhs.m_[5]) + (m_[10] * rhs.m_[9]) + (m_[11] * rhs.m_[13]));
-        T r2c2((m_[8] * rhs.m_[2]) + (m_[9] * rhs.m_[6]) + (m_[10] * rhs.m_[10]) + (m_[11] * rhs.m_[14]));
-        T r2c3((m_[8] * rhs.m_[3]) + (m_[9] * rhs.m_[7]) + (m_[10] * rhs.m_[11]) + (m_[11] * rhs.m_[15]));
-        T r3c0((m_[12] * rhs.m_[0]) + (m_[13] * rhs.m_[4]) + (m_[14] * rhs.m_[8]) + (m_[15] * rhs.m_[12]));
-        T r3c1((m_[12] * rhs.m_[1]) + (m_[13] * rhs.m_[5]) + (m_[14] * rhs.m_[9]) + (m_[15] * rhs.m_[13]));
-        T r3c2((m_[12] * rhs.m_[2]) + (m_[13] * rhs.m_[6]) + (m_[14] * rhs.m_[10]) + (m_[15] * rhs.m_[14]));
-        T r3c3((m_[12] * rhs.m_[3]) + (m_[13] * rhs.m_[7]) + (m_[14] * rhs.m_[11]) + (m_[15] * rhs.m_[15]));
-        m_[0] = r0c0;
-        m_[1] = r0c1;
-        m_[2] = r0c2;
-        m_[3] = r0c3;
-        m_[4] = r1c0;
-        m_[5] = r1c1;
-        m_[6] = r1c2;
-        m_[7] = r1c3;
-        m_[8] = r2c0;
-        m_[9] = r2c1;
-        m_[10] = r2c2;
-        m_[11] = r2c3;
-        m_[12] = r3c0;
-        m_[13] = r3c1;
-        m_[14] = r3c2;
-        m_[15] = r3c3;
+        T c0r0((m_[0] * rhs.m_[0]) + (m_[4] * rhs.m_[1]) + (m_[8] * rhs.m_[2]) + (m_[12] * rhs.m_[3]));
+        T c0r1((m_[1] * rhs.m_[0]) + (m_[5] * rhs.m_[1]) + (m_[9] * rhs.m_[2]) + (m_[13] * rhs.m_[3]));
+        T c0r2((m_[2] * rhs.m_[0]) + (m_[6] * rhs.m_[1]) + (m_[10] * rhs.m_[2]) + (m_[14] * rhs.m_[3]));
+        T c0r3((m_[3] * rhs.m_[0]) + (m_[7] * rhs.m_[1]) + (m_[11] * rhs.m_[2]) + (m_[15] * rhs.m_[3]));
+        T c1r0((m_[0] * rhs.m_[4]) + (m_[4] * rhs.m_[5]) + (m_[8] * rhs.m_[6]) + (m_[12] * rhs.m_[7]));
+        T c1r1((m_[1] * rhs.m_[4]) + (m_[5] * rhs.m_[5]) + (m_[9] * rhs.m_[6]) + (m_[13] * rhs.m_[7]));
+        T c1r2((m_[2] * rhs.m_[4]) + (m_[6] * rhs.m_[5]) + (m_[10] * rhs.m_[6]) + (m_[14] * rhs.m_[7]));
+        T c1r3((m_[3] * rhs.m_[4]) + (m_[7] * rhs.m_[5]) + (m_[11] * rhs.m_[6]) + (m_[15] * rhs.m_[7]));
+        T c2r0((m_[0] * rhs.m_[8]) + (m_[4] * rhs.m_[9]) + (m_[8] * rhs.m_[10]) + (m_[12] * rhs.m_[11]));
+        T c2r1((m_[1] * rhs.m_[8]) + (m_[5] * rhs.m_[9]) + (m_[9] * rhs.m_[10]) + (m_[13] * rhs.m_[11]));
+        T c2r2((m_[2] * rhs.m_[8]) + (m_[6] * rhs.m_[9]) + (m_[10] * rhs.m_[10]) + (m_[14] * rhs.m_[11]));
+        T c2r3((m_[3] * rhs.m_[8]) + (m_[7] * rhs.m_[9]) + (m_[11] * rhs.m_[10]) + (m_[15] * rhs.m_[11]));
+        T c3r0((m_[0] * rhs.m_[12]) + (m_[4] * rhs.m_[13]) + (m_[8] * rhs.m_[14]) + (m_[12] * rhs.m_[15]));
+        T c3r1((m_[1] * rhs.m_[12]) + (m_[5] * rhs.m_[13]) + (m_[9] * rhs.m_[14]) + (m_[13] * rhs.m_[15]));
+        T c3r2((m_[2] * rhs.m_[12]) + (m_[6] * rhs.m_[13]) + (m_[10] * rhs.m_[14]) + (m_[14] * rhs.m_[15]));
+        T c3r3((m_[3] * rhs.m_[12]) + (m_[7] * rhs.m_[13]) + (m_[11] * rhs.m_[14]) + (m_[15] * rhs.m_[15]));
+        m_[0] = c0r0;
+        m_[1] = c0r1;
+        m_[2] = c0r2;
+        m_[3] = c0r3;
+        m_[4] = c1r0;
+        m_[5] = c1r1;
+        m_[6] = c1r2;
+        m_[7] = c1r3;
+        m_[8] = c2r0;
+        m_[9] = c2r1;
+        m_[10] = c2r2;
+        m_[11] = c2r3;
+        m_[12] = c3r0;
+        m_[13] = c3r1;
+        m_[14] = c3r2;
+        m_[15] = c3r3;
         return *this;
     }
 
@@ -768,13 +768,13 @@ public:
         return tmat4(*this) /= rhs;
     }
 
-    ArrayProxy<T> operator[](int index)
+    ArrayProxy<T, 4> operator[](int index)
     {
-        return ArrayProxy<T>(&m_[index * 4]);
+        return ArrayProxy<T, 4>(&m_[index]);
     }
-    const ArrayProxy<T> operator[](int index) const
+    const ArrayProxy<T, 4> operator[](int index) const
     {
-        return ArrayProxy<T>(const_cast<T*>(&m_[index * 4]));
+        return ArrayProxy<T, 4>(const_cast<T*>(&m_[index]));
     }
 
 private:
