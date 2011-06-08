@@ -71,11 +71,12 @@ public:
         m_[3] = 1;
     }
 
-    void transpose()
+    tmat2& transpose()
     {
         T tmp_val = m_[1];
         m_[1] = m_[2];
         m_[2] = tmp_val;
+        return *this;
     }
 
     void print() const
@@ -264,7 +265,7 @@ public:
         m_[8] = 1;
     }
 
-    void transpose()
+    tmat3& transpose()
     {
         T tmp_val = m_[1];
         m_[1] = m_[3];
@@ -275,6 +276,7 @@ public:
         tmp_val = m_[5];
         m_[5] = m_[7];
         m_[7] = tmp_val;
+        return *this;
     }
 
     void print() const
@@ -531,7 +533,7 @@ public:
         m_[15] = 1;
     }
 
-    void transpose()
+    tmat4& transpose()
     {
         T tmp_val = m_[1];
         m_[1] = m_[4];
@@ -551,6 +553,7 @@ public:
         tmp_val = m_[11];
         m_[11] = m_[14];
         m_[14] = tmp_val;
+        return *this;
     }
 
     void print() const
