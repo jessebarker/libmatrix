@@ -11,7 +11,7 @@
 //
 #ifndef MAT_H_
 #define MAT_H_
-
+#include <stdexcept>
 #include <iostream>
 #include <iomanip>
 #include "vec.h"
@@ -61,6 +61,13 @@ public:
         m_[2] = m.m_[2];
         m_[3] = m.m_[3];
     }
+    tmat2(const T& c0r0, const T& c0r1, const T& c1r0, const T& c1r1)
+    {
+        m_[0] = c0r0;
+        m_[1] = c0r1;
+        m_[2] = c1r0;
+        m_[3] = c1r1;
+    }
     ~tmat2() {}
 
     void setIdentity()
@@ -76,6 +83,25 @@ public:
         T tmp_val = m_[1];
         m_[1] = m_[2];
         m_[2] = tmp_val;
+        return *this;
+    }
+
+    T determinant()
+    {
+        return (m_[0] * m_[3]) - (m_[2] * m_[1]);
+    }
+
+    tmat2& inverse() throw(std::runtime_error)
+    {
+        T d(determinant());
+        if (d == static_cast<T>(0))
+        {
+            throw std::runtime_error("Matrix is noninvertible!!!!");
+        }
+        m_[0] /= d;
+        m_[1] /= d;
+        m_[2] /= d;
+        m_[3] /= d;        
         return *this;
     }
 
@@ -250,6 +276,20 @@ public:
         m_[7] = m.m_[7];
         m_[8] = m.m_[8];
     }
+    tmat3(const T& c0r0, const T& c0r1, const T& c0r2,
+           const T& c1r0, const T& c1r1, const T& c1r2,
+           const T& c2r0, const T& c2r1, const T& c2r2)
+    {
+        m_[0] = c0r0;
+        m_[1] = c0r1;
+        m_[2] = c0r2;
+        m_[3] = c1r0;
+        m_[4] = c1r1;
+        m_[5] = c1r2;
+        m_[6] = c2r0;
+        m_[7] = c2r1;
+        m_[8] = c2r2;
+    }
     ~tmat3() {}
 
     void setIdentity()
@@ -277,6 +317,44 @@ public:
         m_[5] = m_[7];
         m_[7] = tmp_val;
         return *this;
+    }
+
+    T determinant()
+    {
+        tmat2<T> minor0(m_[4], m_[5], m_[7], m_[8]);
+        tmat2<T> minor3(m_[1], m_[2], m_[7], m_[8]);
+        tmat2<T> minor6(m_[1], m_[2], m_[4], m_[5]);
+        return (m_[0] * minor0.determinant()) - 
+               (m_[3] * minor3.determinant()) +
+               (m_[6] * minor6.determinant());
+    }
+
+    tmat3& inverse() throw(std::runtime_error)
+    {
+        T d(determinant());
+        if (d == static_cast<T>(0))
+        {
+            throw std::runtime_error("Matrix is noninvertible!!!!");
+        }
+        tmat2<T> minor0(m_[4], m_[5], m_[7], m_[8]);
+        tmat2<T> minor1(m_[3], m_[5], m_[6], m_[8]);
+        tmat2<T> minor2(m_[3], m_[4], m_[6], m_[7]);
+        tmat2<T> minor3(m_[1], m_[2], m_[7], m_[8]);
+        tmat2<T> minor4(m_[0], m_[2], m_[6], m_[8]);
+        tmat2<T> minor5(m_[0], m_[1], m_[6], m_[7]);
+        tmat2<T> minor6(m_[1], m_[2], m_[4], m_[5]);
+        tmat2<T> minor7(m_[0], m_[2], m_[3], m_[5]);
+        tmat2<T> minor8(m_[0], m_[1], m_[3], m_[4]);
+        m_[0] = minor0.determinant() / d;
+        m_[1] = minor1.determinant() / d;
+        m_[2] = minor2.determinant() / d;
+        m_[3] = minor3.determinant() / d;
+        m_[4] = minor4.determinant() / d;
+        m_[5] = minor5.determinant() / d;
+        m_[6] = minor6.determinant() / d;
+        m_[7] = minor7.determinant() / d;
+        m_[8] = minor8.determinant() / d;
+        return *this;       
     }
 
     void print() const
@@ -553,6 +631,60 @@ public:
         tmp_val = m_[11];
         m_[11] = m_[14];
         m_[14] = tmp_val;
+        return *this;
+    }
+
+    T determinant()
+    {
+        tmat3<T> minor0(m_[5], m_[6], m_[7], m_[9], m_[10], m_[11], m_[13], m_[14], m_[15]);
+        tmat3<T> minor4(m_[1], m_[2], m_[3], m_[9], m_[10], m_[11], m_[13], m_[14], m_[15]);
+        tmat3<T> minor8(m_[1], m_[2], m_[3], m_[5], m_[6], m_[7], m_[13], m_[14], m_[15]);
+        tmat3<T> minor12(m_[1], m_[2], m_[3], m_[5], m_[6], m_[7], m_[9], m_[10], m_[11]);
+        return (m_[0] * minor0.determinant()) -
+               (m_[4] * minor4.determinant()) +
+               (m_[8] * minor8.determinant()) -
+               (m_[12] * minor12.determinant());
+    }
+
+    tmat4& inverse() throw(std::runtime_error)
+    {
+        T d(determinant());
+        if (d == static_cast<T>(0))
+        {
+            throw std::runtime_error("Matrix is noninvertible!!!!");
+        }
+        tmat3<T> minor0(m_[5], m_[6], m_[7], m_[9], m_[10], m_[11], m_[13], m_[14], m_[15]);
+        tmat3<T> minor1(m_[4], m_[6], m_[7], m_[8], m_[10], m_[11], m_[12], m_[14], m_[15]);
+        tmat3<T> minor2(m_[4], m_[5], m_[7], m_[8], m_[9], m_[11], m_[12], m_[13], m_[15]);
+        tmat3<T> minor3(m_[4], m_[5], m_[6], m_[8], m_[9], m_[10], m_[12], m_[13], m_[14]);
+        tmat3<T> minor4(m_[1], m_[2], m_[3], m_[9], m_[10], m_[11], m_[13], m_[14], m_[15]);
+        tmat3<T> minor5(m_[0], m_[2], m_[3], m_[8], m_[10], m_[11], m_[12], m_[14], m_[15]);
+        tmat3<T> minor6(m_[0], m_[1], m_[3], m_[8], m_[9], m_[11], m_[12], m_[13], m_[15]);
+        tmat3<T> minor7(m_[0], m_[1], m_[2], m_[8], m_[9], m_[10], m_[12], m_[13], m_[14]);
+        tmat3<T> minor8(m_[1], m_[2], m_[3], m_[5], m_[6], m_[7], m_[13], m_[14], m_[15]);
+        tmat3<T> minor9(m_[0], m_[2], m_[3], m_[4], m_[6], m_[7], m_[12], m_[14], m_[15]);
+        tmat3<T> minor10(m_[0], m_[1], m_[3], m_[4], m_[5], m_[7], m_[12], m_[13], m_[15]);
+        tmat3<T> minor11(m_[0], m_[1], m_[2], m_[4], m_[5], m_[6], m_[12], m_[13], m_[14]);
+        tmat3<T> minor12(m_[1], m_[2], m_[3], m_[5], m_[6], m_[7], m_[9], m_[10], m_[11]);
+        tmat3<T> minor13(m_[0], m_[2], m_[3], m_[4], m_[6], m_[7], m_[8], m_[10], m_[11]);
+        tmat3<T> minor14(m_[0], m_[1], m_[3], m_[4], m_[5], m_[7], m_[8], m_[9], m_[11]);
+        tmat3<T> minor15(m_[0], m_[1], m_[2], m_[4], m_[5], m_[6], m_[8], m_[9], m_[10]);
+        m_[0] = minor0.determinant() / d;
+        m_[1] = minor1.determinant() / d;
+        m_[2] = minor2.determinant() / d;
+        m_[3] = minor3.determinant() / d;
+        m_[4] = minor4.determinant() / d;
+        m_[5] = minor5.determinant() / d;
+        m_[6] = minor6.determinant() / d;
+        m_[7] = minor7.determinant() / d;
+        m_[8] = minor8.determinant() / d;
+        m_[9] = minor9.determinant() / d;
+        m_[10] = minor10.determinant() / d;
+        m_[11] = minor11.determinant() / d;
+        m_[12] = minor12.determinant() / d;
+        m_[13] = minor13.determinant() / d;
+        m_[14] = minor14.determinant() / d;
+        m_[15] = minor15.determinant() / d;
         return *this;
     }
 
