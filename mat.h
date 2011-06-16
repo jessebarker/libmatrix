@@ -98,10 +98,14 @@ public:
         {
             throw std::runtime_error("Matrix is noninvertible!!!!");
         }
-        m_[0] /= d;
-        m_[1] /= d;
-        m_[2] /= d;
-        m_[3] /= d;        
+        T c0r0(m_[3] / d);
+        T c0r1(-m_[1] / d);
+        T c1r0(-m_[2] / d);
+        T c1r1(m_[0] / d);
+        m_[0] = c0r0;
+        m_[1] = c0r1;
+        m_[2] = c1r0;
+        m_[3] = c1r1;        
         return *this;
     }
 
@@ -110,19 +114,32 @@ public:
         static const int precision(6);
         // row 0
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2];
         std::cout << " |" << std::endl;
         // row 1
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3];
         std::cout << " |" << std::endl;
     }
 
     operator const T*() const { return &m_[0];}
+
+    bool operator==(const tmat2& rhs) const
+    {
+        return m_[0] == rhs.m_[0] &&
+               m_[1] == rhs.m_[1] &&
+               m_[2] == rhs.m_[2] &&
+               m_[3] == rhs.m_[3];
+    }
+
+    bool operator!=(const tmat2& rhs) const
+    {
+        return !(*this == rhs);
+    }
 
     tmat2& operator=(const tmat2& rhs)
     {
@@ -337,13 +354,13 @@ public:
             throw std::runtime_error("Matrix is noninvertible!!!!");
         }
         tmat2<T> minor0(m_[4], m_[5], m_[7], m_[8]);
-        tmat2<T> minor1(m_[3], m_[5], m_[6], m_[8]);
-        tmat2<T> minor2(m_[3], m_[4], m_[6], m_[7]);
-        tmat2<T> minor3(m_[1], m_[2], m_[7], m_[8]);
+        tmat2<T> minor1(m_[7], m_[8], m_[1], m_[2]);
+        tmat2<T> minor2(m_[1], m_[2], m_[4], m_[5]);
+        tmat2<T> minor3(m_[6], m_[8], m_[3], m_[5]);
         tmat2<T> minor4(m_[0], m_[2], m_[6], m_[8]);
-        tmat2<T> minor5(m_[0], m_[1], m_[6], m_[7]);
-        tmat2<T> minor6(m_[1], m_[2], m_[4], m_[5]);
-        tmat2<T> minor7(m_[0], m_[2], m_[3], m_[5]);
+        tmat2<T> minor5(m_[3], m_[5], m_[0], m_[2]);
+        tmat2<T> minor6(m_[3], m_[4], m_[6], m_[7]);
+        tmat2<T> minor7(m_[6], m_[7], m_[0], m_[1]);
         tmat2<T> minor8(m_[0], m_[1], m_[3], m_[4]);
         m_[0] = minor0.determinant() / d;
         m_[1] = minor1.determinant() / d;
@@ -362,31 +379,49 @@ public:
         static const int precision(6);
         // row 0
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[6];
         std::cout << " |" << std::endl;
         // row 1
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[4];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[7];
         std::cout << " |" << std::endl;
         // row 2
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[5];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[8];
         std::cout << " |" << std::endl;
     }
 
     operator const T*() const { return &m_[0];}
+
+    bool operator==(const tmat3& rhs) const
+    {
+        return m_[0] == rhs.m_[0] &&
+               m_[1] == rhs.m_[1] &&
+               m_[2] == rhs.m_[2] &&
+               m_[3] == rhs.m_[3] &&
+               m_[4] == rhs.m_[4] &&
+               m_[5] == rhs.m_[5] &&
+               m_[6] == rhs.m_[6] &&
+               m_[7] == rhs.m_[7] &&
+               m_[8] == rhs.m_[8];
+    }
+
+    bool operator!=(const tmat3& rhs) const
+    {
+        return !(*this == rhs);
+    }
 
     tmat3& operator=(const tmat3& rhs)
     {
@@ -654,20 +689,23 @@ public:
             throw std::runtime_error("Matrix is noninvertible!!!!");
         }
         tmat3<T> minor0(m_[5], m_[6], m_[7], m_[9], m_[10], m_[11], m_[13], m_[14], m_[15]);
-        tmat3<T> minor1(m_[4], m_[6], m_[7], m_[8], m_[10], m_[11], m_[12], m_[14], m_[15]);
-        tmat3<T> minor2(m_[4], m_[5], m_[7], m_[8], m_[9], m_[11], m_[12], m_[13], m_[15]);
-        tmat3<T> minor3(m_[4], m_[5], m_[6], m_[8], m_[9], m_[10], m_[12], m_[13], m_[14]);
-        tmat3<T> minor4(m_[1], m_[2], m_[3], m_[9], m_[10], m_[11], m_[13], m_[14], m_[15]);
+        tmat3<T> minor1(m_[1], m_[2], m_[3], m_[13], m_[14], m_[15], m_[9], m_[10], m_[11]);
+        tmat3<T> minor2(m_[1], m_[2], m_[3], m_[5], m_[6], m_[7], m_[13], m_[14], m_[15]);
+        tmat3<T> minor3(m_[1], m_[2], m_[3], m_[9], m_[10], m_[11], m_[5], m_[6], m_[7]);
+
+        tmat3<T> minor4(m_[4], m_[6], m_[7], m_[12], m_[14], m_[15], m_[8], m_[10], m_[11]);
         tmat3<T> minor5(m_[0], m_[2], m_[3], m_[8], m_[10], m_[11], m_[12], m_[14], m_[15]);
-        tmat3<T> minor6(m_[0], m_[1], m_[3], m_[8], m_[9], m_[11], m_[12], m_[13], m_[15]);
-        tmat3<T> minor7(m_[0], m_[1], m_[2], m_[8], m_[9], m_[10], m_[12], m_[13], m_[14]);
-        tmat3<T> minor8(m_[1], m_[2], m_[3], m_[5], m_[6], m_[7], m_[13], m_[14], m_[15]);
-        tmat3<T> minor9(m_[0], m_[2], m_[3], m_[4], m_[6], m_[7], m_[12], m_[14], m_[15]);
+        tmat3<T> minor6(m_[0], m_[2], m_[3], m_[12], m_[14], m_[15], m_[4], m_[6], m_[7]);
+        tmat3<T> minor7(m_[0], m_[2], m_[3], m_[4], m_[6], m_[7], m_[8], m_[10], m_[11]);
+
+        tmat3<T> minor8(m_[4], m_[5], m_[7], m_[8], m_[9], m_[11], m_[12], m_[13], m_[15]);
+        tmat3<T> minor9(m_[0], m_[1], m_[3], m_[12], m_[13], m_[15], m_[8], m_[9], m_[11]);
         tmat3<T> minor10(m_[0], m_[1], m_[3], m_[4], m_[5], m_[7], m_[12], m_[13], m_[15]);
-        tmat3<T> minor11(m_[0], m_[1], m_[2], m_[4], m_[5], m_[6], m_[12], m_[13], m_[14]);
-        tmat3<T> minor12(m_[1], m_[2], m_[3], m_[5], m_[6], m_[7], m_[9], m_[10], m_[11]);
-        tmat3<T> minor13(m_[0], m_[2], m_[3], m_[4], m_[6], m_[7], m_[8], m_[10], m_[11]);
-        tmat3<T> minor14(m_[0], m_[1], m_[3], m_[4], m_[5], m_[7], m_[8], m_[9], m_[11]);
+        tmat3<T> minor11(m_[0], m_[1], m_[3], m_[8], m_[9], m_[11], m_[4], m_[5], m_[7]);
+
+        tmat3<T> minor12(m_[4], m_[5], m_[6], m_[12], m_[13], m_[14], m_[8], m_[9], m_[10]);
+        tmat3<T> minor13(m_[0], m_[1], m_[2], m_[8], m_[9], m_[10], m_[12], m_[13], m_[14]);
+        tmat3<T> minor14(m_[0], m_[1], m_[2], m_[12], m_[13], m_[14], m_[4], m_[5], m_[6]);
         tmat3<T> minor15(m_[0], m_[1], m_[2], m_[4], m_[5], m_[6], m_[8], m_[9], m_[10]);
         m_[0] = minor0.determinant() / d;
         m_[1] = minor1.determinant() / d;
@@ -693,47 +731,72 @@ public:
         static const int precision(6);
         // row 0
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[4];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[8];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[0][3];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[12];
         std::cout << " |" << std::endl;
         // row 1
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[5];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[9];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[1][3];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[13];
         std::cout << " |" << std::endl;
         // row 2
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[6];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[10];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[2][3];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[14];
         std::cout << " |" << std::endl;
         // row 3
         std::cout << "| ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][0];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][1];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[7];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][2];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[11];
         std::cout << " ";
-        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[3][3];
+        std::cout << std::fixed << std::showpoint << std::setprecision(precision) << m_[15];
         std::cout << " |" << std::endl;
     }
 
     operator const T*() const { return &m_[0];}
+
+    bool operator==(const tmat4& rhs) const
+    {
+        return m_[0] == rhs.m_[0] &&
+               m_[1] == rhs.m_[1] &&
+               m_[2] == rhs.m_[2] &&
+               m_[3] == rhs.m_[3] &&
+               m_[4] == rhs.m_[4] &&
+               m_[5] == rhs.m_[5] &&
+               m_[6] == rhs.m_[6] &&
+               m_[7] == rhs.m_[7] &&
+               m_[8] == rhs.m_[8] &&
+               m_[9] == rhs.m_[9] &&
+               m_[10] == rhs.m_[10] &&
+               m_[11] == rhs.m_[11] &&
+               m_[12] == rhs.m_[12] &&
+               m_[13] == rhs.m_[13] &&
+               m_[14] == rhs.m_[14] &&
+               m_[15] == rhs.m_[15];
+    }
+
+    bool operator!=(const tmat4& rhs) const
+    {
+        return !(*this == rhs);
+    }
 
     tmat4& operator=(const tmat4& rhs)
     {
