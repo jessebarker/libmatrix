@@ -1,24 +1,31 @@
-TARGETS = libmatrix.a
-TESTS = matrix_inverse_test
-SRCS = mat.cc program.cc matrix_inverse_test.cc
-OBJS = $(SRCS:.cc=.o)
 CXXFLAGS = -Wall -Werror -pedantic -O3
+LIBMATRIX = libmatrix.a
+LIBSRCS = mat.cc program.cc
+LIBOBJS = $(LIBSRCS:.cc=.o)
+TESTDIR = test
+LIBMATRIX_TESTS = $(TESTDIR)/libmatrix_test
+TESTSRCS = $(TESTDIR)/options.cc \
+           $(TESTDIR)/inverse_test.cc \
+           $(TESTDIR)/libmatrix_test.cc
+TESTOBJS = $(TESTSRCS:.cc=.o)
 
 # Make sure to build both the library targets and the tests, and generate 
 # a make failure if the tests don't pass.
-default: $(TARGETS) $(TESTS) run_tests
+default: $(LIBMATRIX) $(LIBMATRIX_TESTS) run_tests
 
 # Main library targets here.
-mat.o : mat.cc mat.h
-program.o: program.cc program.h
+mat.o : mat.cc mat.h vec.h
+program.o: program.cc program.h mat.h vec.h
 libmatrix.a : mat.o mat.h stack.h vec.h program.o program.h
-	$(AR) -r $@  $(OBJS)
+	$(AR) -r $@  $(LIBOBJS)
 
 # Tests and execution targets here.
-matrix_inverse_test.o: matrix_inverse_test.cc mat.h
-matrix_inverse_test: matrix_inverse_test.o libmatrix.a
+$(TESTDIR)/options.o: $(TESTDIR)/options.cc $(TESTDIR)/libmatrix_test.h
+$(TESTDIR)/libmatrix_test.o: $(TESTDIR)/libmatrix_test.cc $(TESTDIR)/libmatrix_test.h $(TESTDIR)/inverse_test.h
+$(TESTDIR)/inverse_test.o: $(TESTDIR)/inverse_test.cc $(TESTDIR)/inverse_test.h $(TESTDIR)/libmatrix_test.h mat.h
+$(TESTDIR)/libmatrix_test: $(TESTDIR)/options.o $(TESTDIR)/libmatrix_test.o $(TESTDIR)/inverse_test.o libmatrix.a
 	$(CXX) -o $@ $?
-run_tests: $(TESTS)
-	./matrix_inverse_test
+run_tests: $(LIBMATRIX_TESTS)
+	$(LIBMATRIX_TESTS)
 clean :
-	$(RM) $(OBJS) $(TARGETS)
+	$(RM) $(LIBOBJS) $(TESTOBJS) $(LIBMATRIX) $(LIBMATRIX_TESTS)
