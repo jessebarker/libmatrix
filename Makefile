@@ -6,6 +6,7 @@ TESTDIR = test
 LIBMATRIX_TESTS = $(TESTDIR)/libmatrix_test
 TESTSRCS = $(TESTDIR)/options.cc \
            $(TESTDIR)/inverse_test.cc \
+           $(TESTDIR)/transpose_test.cc \
            $(TESTDIR)/libmatrix_test.cc
 TESTOBJS = $(TESTSRCS:.cc=.o)
 
@@ -21,10 +22,11 @@ libmatrix.a : mat.o mat.h stack.h vec.h program.o program.h
 
 # Tests and execution targets here.
 $(TESTDIR)/options.o: $(TESTDIR)/options.cc $(TESTDIR)/libmatrix_test.h
-$(TESTDIR)/libmatrix_test.o: $(TESTDIR)/libmatrix_test.cc $(TESTDIR)/libmatrix_test.h $(TESTDIR)/inverse_test.h
+$(TESTDIR)/libmatrix_test.o: $(TESTDIR)/libmatrix_test.cc $(TESTDIR)/libmatrix_test.h $(TESTDIR)/inverse_test.h $(TESTDIR)/transpose_test.h
 $(TESTDIR)/inverse_test.o: $(TESTDIR)/inverse_test.cc $(TESTDIR)/inverse_test.h $(TESTDIR)/libmatrix_test.h mat.h
-$(TESTDIR)/libmatrix_test: $(TESTDIR)/options.o $(TESTDIR)/libmatrix_test.o $(TESTDIR)/inverse_test.o libmatrix.a
-	$(CXX) -o $@ $?
+$(TESTDIR)/transpose_test.o: $(TESTDIR)/transpose_test.cc $(TESTDIR)/transpose_test.h $(TESTDIR)/libmatrix_test.h mat.h
+$(TESTDIR)/libmatrix_test: $(TESTOBJS) libmatrix.a
+	$(CXX) -o $@ $^
 run_tests: $(LIBMATRIX_TESTS)
 	$(LIBMATRIX_TESTS)
 clean :

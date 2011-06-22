@@ -1,3 +1,14 @@
+//
+// Copyright (c) 2010 Linaro Limited
+//
+// All rights reserved. This program and the accompanying materials
+// are made available under the terms of the MIT License which accompanies
+// this distribution, and is available at
+// http://www.opensource.org/licenses/mit-license.php
+//
+// Contributors:
+//     Jesse Barker - original implementation.
+//
 #include <iostream>
 #include <iomanip>
 #include <getopt.h>

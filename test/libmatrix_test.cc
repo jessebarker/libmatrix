@@ -14,6 +14,7 @@
 #include <vector>
 #include "libmatrix_test.h"
 #include "inverse_test.h"
+#include "transpose_test.h"
 
 using std::cerr;
 using std::cout;
@@ -35,12 +36,19 @@ main(int argc, char** argv)
     testVec.push_back(new MatrixTest2x2Inverse());
     testVec.push_back(new MatrixTest3x3Inverse());
     testVec.push_back(new MatrixTest4x4Inverse());
+    testVec.push_back(new MatrixTest2x2Transpose());
+    testVec.push_back(new MatrixTest3x3Transpose());
+    testVec.push_back(new MatrixTest4x4Transpose());
 
     for (vector<MatrixTest*>::iterator testIt = testVec.begin();
          testIt != testVec.end();
          testIt++)
     {
         MatrixTest* curTest = *testIt;
+        if (testOptions.beVerbose())
+        {
+            cout << "Running test " << curTest->name() << endl;
+        }
         curTest->run(testOptions);
         if (!curTest->passed())
         {

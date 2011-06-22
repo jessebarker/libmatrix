@@ -9,31 +9,30 @@
 // Contributors:
 //     Jesse Barker - original implementation.
 //
-#ifndef INVERSE_TEST_H_
-#define INVERSE_TEST_H_
+#ifndef TRANSPOSE_TEST_H_
+#define TRANSPOSE_TEST_H_
 
 class MatrixTest;
 class Options;
 
-class MatrixTest2x2Inverse : public MatrixTest
+class MatrixTest2x2Transpose : public MatrixTest
 {
 public:
-    MatrixTest2x2Inverse() : MatrixTest("mat2::inverse") {}
+    MatrixTest2x2Transpose() : MatrixTest("mat2::transpose") {}
     virtual void run(const Options& options);
 };
 
-class MatrixTest3x3Inverse : public MatrixTest
+class MatrixTest3x3Transpose : public MatrixTest
 {
 public:
-    MatrixTest3x3Inverse() : MatrixTest("mat3::inverse") {}
+    MatrixTest3x3Transpose() : MatrixTest("mat3::transpose") {}
     virtual void run(const Options& options);
 };
 
-class MatrixTest4x4Inverse : public MatrixTest
+class MatrixTest4x4Transpose : public MatrixTest
 {
 public:
-    MatrixTest4x4Inverse() : MatrixTest("mat4::inverse") {}
+    MatrixTest4x4Transpose() : MatrixTest("mat4::transpose") {}
     virtual void run(const Options& options);
 };
-
-#endif // INVERSE_TEST_H_
+#endif // TRANSPOSE_TEST_H_
