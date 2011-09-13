@@ -64,7 +64,7 @@ public:
         return *this;
     }
 
-    const tvec2 operator/(const T& rhs)
+    const tvec2 operator/(const T& rhs) const
     {
         return tvec2(*this) /= rhs;
     }
@@ -76,7 +76,7 @@ public:
         return *this;
     }
 
-    const tvec2 operator*(const T& rhs)
+    const tvec2 operator*(const T& rhs) const
     {
         return tvec2(*this) *= rhs;
     }
@@ -88,7 +88,7 @@ public:
         return *this;
     }
     
-    const tvec2 operator+(const T& rhs)
+    const tvec2 operator+(const T& rhs) const
     {
         return tvec2(*this) += rhs;
     }
@@ -100,7 +100,7 @@ public:
         return *this;
     }
 
-    const tvec2 operator+(const tvec2& rhs)
+    const tvec2 operator+(const tvec2& rhs) const
     {
         return tvec2(*this) += rhs;
     }
@@ -112,7 +112,7 @@ public:
         return *this;
     }
     
-    const tvec2 operator-(const T& rhs)
+    const tvec2 operator-(const T& rhs) const
     {
         return tvec2(*this) -= rhs;
     }
@@ -124,7 +124,7 @@ public:
         return *this;
     }
 
-    const tvec2 operator-(const tvec2& rhs)
+    const tvec2 operator-(const tvec2& rhs) const
     {
         return tvec2(*this) -= rhs;
     }
@@ -206,7 +206,7 @@ public:
         return *this;
     }
 
-    const tvec3 operator/(const T& rhs)
+    const tvec3 operator/(const T& rhs) const
     {
         return tvec3(*this) /= rhs;
     }
@@ -219,7 +219,7 @@ public:
         return *this;
     }
 
-    const tvec3 operator*(const T& rhs)
+    const tvec3 operator*(const T& rhs) const
     {
         return tvec3(*this) *= rhs;
     }
@@ -232,7 +232,7 @@ public:
         return *this;
     }
 
-    const tvec3 operator+(const T& rhs)
+    const tvec3 operator+(const T& rhs) const
     {
         return tvec3(*this) += rhs;
     }
@@ -245,7 +245,7 @@ public:
         return *this;
     }
 
-    const tvec3 operator+(const tvec3& rhs)
+    const tvec3 operator+(const tvec3& rhs) const
     {
         return tvec3(*this) += rhs;
     }
@@ -258,7 +258,7 @@ public:
         return *this;
     }
 
-    const tvec3 operator-(const T& rhs)
+    const tvec3 operator-(const T& rhs) const
     {
         return tvec3(*this) -= rhs;
     }
@@ -271,7 +271,7 @@ public:
         return *this;
     }
 
-    const tvec3 operator-(const tvec3& rhs)
+    const tvec3 operator-(const tvec3& rhs) const
     {
         return tvec3(*this) -= rhs;
     }
@@ -370,7 +370,7 @@ public:
         return *this;
     }
 
-    const tvec4 operator/(const T& rhs)
+    const tvec4 operator/(const T& rhs) const
     {
         return tvec4(*this) /= rhs;
     }
@@ -384,7 +384,7 @@ public:
         return *this;
     }
 
-    const tvec4 operator*(const T& rhs)
+    const tvec4 operator*(const T& rhs) const
     {
         return tvec4(*this) *= rhs;
     }
@@ -398,7 +398,7 @@ public:
         return *this;
     }
 
-    const tvec4 operator+(const T& rhs)
+    const tvec4 operator+(const T& rhs) const
     {
         return tvec4(*this) += rhs;
     }
@@ -412,7 +412,7 @@ public:
         return *this;
     }
 
-    const tvec4 operator+(const tvec4& rhs)
+    const tvec4 operator+(const tvec4& rhs) const
     {
         return tvec4(*this) += rhs;
     }
@@ -426,7 +426,7 @@ public:
         return *this;
     }
 
-    const tvec4 operator-(const T& rhs)
+    const tvec4 operator-(const T& rhs) const
     {
         return tvec4(*this) -= rhs;
     }
@@ -440,7 +440,7 @@ public:
         return *this;
     }
 
-    const tvec4 operator-(const tvec4& rhs)
+    const tvec4 operator-(const tvec4& rhs) const
     {
         return tvec4(*this) -= rhs;
     }

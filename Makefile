@@ -5,6 +5,7 @@ LIBOBJS = $(LIBSRCS:.cc=.o)
 TESTDIR = test
 LIBMATRIX_TESTS = $(TESTDIR)/libmatrix_test
 TESTSRCS = $(TESTDIR)/options.cc \
+           $(TESTDIR)/const_vec_test.cc \
            $(TESTDIR)/inverse_test.cc \
            $(TESTDIR)/transpose_test.cc \
            $(TESTDIR)/libmatrix_test.cc
@@ -23,6 +24,7 @@ libmatrix.a : mat.o mat.h stack.h vec.h program.o program.h
 # Tests and execution targets here.
 $(TESTDIR)/options.o: $(TESTDIR)/options.cc $(TESTDIR)/libmatrix_test.h
 $(TESTDIR)/libmatrix_test.o: $(TESTDIR)/libmatrix_test.cc $(TESTDIR)/libmatrix_test.h $(TESTDIR)/inverse_test.h $(TESTDIR)/transpose_test.h
+$(TESTDIR)/const_vec_test.o: $(TESTDIR)/const_vec_test.cc $(TESTDIR)/const_vec_test.h $(TESTDIR)/libmatrix_test.h vec.h
 $(TESTDIR)/inverse_test.o: $(TESTDIR)/inverse_test.cc $(TESTDIR)/inverse_test.h $(TESTDIR)/libmatrix_test.h mat.h
 $(TESTDIR)/transpose_test.o: $(TESTDIR)/transpose_test.cc $(TESTDIR)/transpose_test.h $(TESTDIR)/libmatrix_test.h mat.h
 $(TESTDIR)/libmatrix_test: $(TESTOBJS) libmatrix.a

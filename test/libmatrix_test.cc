@@ -15,6 +15,7 @@
 #include "libmatrix_test.h"
 #include "inverse_test.h"
 #include "transpose_test.h"
+#include "const_vec_test.h"
 
 using std::cerr;
 using std::cout;
