@@ -29,6 +29,8 @@ Vec2TestConstOperator::run(const Options& options)
     vec2 aminusb(a - b);
     vec2 atimesb(a * b);
     vec2 adivb(a / b);
+    const float s(2.5);
+    vec2 stimesb(s * b);
 }
 
 void
@@ -40,6 +42,8 @@ Vec3TestConstOperator::run(const Options& options)
     vec3 aminusb(a - b);
     vec3 atimesb(a * b);
     vec3 adivb(a / b);
+    const float s(2.5);
+    vec3 stimesb(s * b);
 }
 
 void
@@ -51,4 +55,6 @@ Vec4TestConstOperator::run(const Options& options)
     vec4 aminusb(a - b);
     vec4 atimesb(a * b);
     vec4 adivb(a / b);
+    const float s(2.5);
+    vec4 stimesb(s * b);
 }

@@ -24,10 +24,10 @@ public:
     tvec2() :
         x_(0),
         y_(0) {}
-    tvec2(T t) :
+    tvec2(const T t) :
         x_(t),
         y_(t) {}
-    tvec2(T x, T y) :
+    tvec2(const T x, const T y) :
         x_(x),
         y_(y) {}
     tvec2(const tvec2& v) :
@@ -183,11 +183,11 @@ public:
         x_(0),
         y_(0),
         z_(0) {}
-    tvec3(T t) :
+    tvec3(const T t) :
         x_(t),
         y_(t),
         z_(t) {}
-    tvec3(T x, T y, T z) :
+    tvec3(const T x, const T y, const T z) :
         x_(x),
         y_(y),
         z_(z) {}
@@ -366,12 +366,12 @@ public:
         y_(0),
         z_(0),
         w_(0) {}
-    tvec4(T t) :
+    tvec4(const T t) :
         x_(t),
         y_(t),
         z_(t),
         w_(t) {}
-    tvec4(T x, T y, T z, T w) :
+    tvec4(const T x, const T y, const T z, const T w) :
         x_(x),
         y_(y),
         z_(z),
@@ -574,5 +574,25 @@ typedef tvec3<bool> bvec3;
 typedef tvec4<bool> bvec4;
 
 } // namespace LibMatrix
+
+// Global operators to allow for things like defining a new vector in terms of
+// a product of a scalar and a vector
+template<typename T>
+const LibMatrix::tvec2<T> operator*(const T t, const LibMatrix::tvec2<T>& v)
+{
+    return v * t;
+}
+
+template<typename T>
+const LibMatrix::tvec3<T> operator*(const T t, const LibMatrix::tvec3<T>& v)
+{
+    return v * t;
+}
+
+template<typename T>
+const LibMatrix::tvec4<T> operator*(const T t, const LibMatrix::tvec4<T>& v)
+{
+    return v * t;
+}
 
 #endif // VEC_H_
