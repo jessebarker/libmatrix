@@ -58,7 +58,7 @@ public:
     void x(const T& val) { x_ = val; }
     void y(const T& val) { y_ = val; }
 
-    // A direct assignment of 'rhs' to this.
+    // A direct assignment of 'rhs' to this.  Return a reference to this.
     tvec2& operator=(const tvec2& rhs)
     {
         if (this != &rhs)
@@ -261,7 +261,7 @@ public:
     void y(const T& val) { y_ = val; }
     void z(const T& val) { z_ = val; }
 
-    // A direct assignment of 'rhs' to this.
+    // A direct assignment of 'rhs' to this.  Return a reference to this.
     tvec3& operator=(const tvec3& rhs)
     {
         if (this != &rhs)
@@ -489,7 +489,7 @@ public:
     void z(const T& val) { z_ = val; }
     void w(const T& val) { w_ = val; }
 
-    // A direct assignment of 'rhs' to this.
+    // A direct assignment of 'rhs' to this.  Return a reference to this.
     tvec4& operator=(const tvec4& rhs)
     {
         if (this != &rhs)

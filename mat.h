@@ -46,6 +46,11 @@ private:
 // However, the internal data representation is column-major, so when using 
 // the raw data access member to treat the data as a singly-dimensioned array,
 // it does not have to be transposed.
+//
+// A template class for creating, managing and operating on a 2x2 matrix
+// of any type you like (intended for built-in types, but as long as it 
+// supports the basic arithmetic and assignment operators, any type should
+// work).
 template<typename T>
 class tmat2
 {
@@ -70,6 +75,7 @@ public:
     }
     ~tmat2() {}
 
+    // Reset this to the identity matrix.
     void setIdentity()
     {
         m_[0] = 1;
@@ -78,6 +84,7 @@ public:
         m_[3] = 1;
     }
 
+    // Transpose this.  Return a reference to this.
     tmat2& transpose()
     {
         T tmp_val = m_[1];
@@ -86,11 +93,16 @@ public:
         return *this;
     }
 
+    // Compute the determinant of this and return it.
     T determinant()
     {
         return (m_[0] * m_[3]) - (m_[2] * m_[1]);
     }
 
+    // Invert this.  Return a reference to this.
+    //
+    // NOTE: If this is non-invertible, we will
+    //       throw to avoid undefined behavior.
     tmat2& inverse() throw(std::runtime_error)
     {
         T d(determinant());
@@ -109,6 +121,8 @@ public:
         return *this;
     }
 
+    // Print the elements of the matrix to standard out.
+    // Really only useful for debug and test.
     void print() const
     {
         static const int precision(6);
@@ -126,8 +140,12 @@ public:
         std::cout << " |" << std::endl;
     }
 
+    // Allow raw data access for API calls and the like.
+    // For example, it is valid to pass a tmat2<float> into a call to
+    // the OpenGL command "glUniformMatrix2fv()".
     operator const T*() const { return &m_[0];}
 
+    // Test if 'rhs' is equal to this.
     bool operator==(const tmat2& rhs) const
     {
         return m_[0] == rhs.m_[0] &&
@@ -136,11 +154,13 @@ public:
                m_[3] == rhs.m_[3];
     }
 
+    // Test if 'rhs' is not equal to this.
     bool operator!=(const tmat2& rhs) const
     {
         return !(*this == rhs);
     }
 
+    // A direct assignment of 'rhs' to this.  Return a reference to this.
     tmat2& operator=(const tmat2& rhs)
     {
         if (this != &rhs)
@@ -153,6 +173,7 @@ public:
         return *this;
     }
 
+    // Add another matrix to this.  Return a reference to this.
     tmat2& operator+=(const tmat2& rhs)
     {
         m_[0] += rhs.m_[0];
@@ -162,11 +183,13 @@ public:
         return *this;
     }
 
+    // Add another matrix to a copy of this.  Return the copy.
     const tmat2 operator+(const tmat2& rhs)
     {
         return tmat2(*this) += rhs;
     }
 
+    // Subtract another matrix from this.  Return a reference to this.
     tmat2& operator-=(const tmat2& rhs)
     {
         m_[0] -= rhs.m_[0];
@@ -176,11 +199,13 @@ public:
         return *this;
     }
 
+    // Subtract another matrix from a copy of this.  Return the copy.
     const tmat2 operator-(const tmat2& rhs)
     {
         return tmat2(*this) += rhs;
     }
 
+    // Multiply this by another matrix.  Return a reference to this.
     tmat2& operator*=(const tmat2& rhs)
     {
         T c0r0((m_[0] * rhs.m_[0]) + (m_[2] * rhs.m_[1]));
@@ -194,11 +219,13 @@ public:
         return *this;
     }
 
+    // Multiply a copy of this by another matrix.  Return the copy.
     const tmat2 operator*(const tmat2& rhs)
     {
         return tmat2(*this) *= rhs;
     }
 
+    // Multiply this by a scalar.  Return a reference to this.
     tmat2& operator*=(const T& rhs)
     {
         m_[0] *= rhs;
@@ -208,11 +235,13 @@ public:
         return *this;
     }
 
+    // Multiply a copy of this by a scalar.  Return the copy.
     const tmat2 operator*(const T& rhs)
     {
         return tmat2(*this) *= rhs;
     }
 
+    // Divide this by a scalar.  Return a reference to this.
     tmat2& operator/=(const T& rhs)
     {
         m_[0] /= rhs;
@@ -222,11 +251,15 @@ public:
         return *this;
     }
 
+    // Divide a copy of this by a scalar.  Return the copy.
     const tmat2 operator/(const T& rhs)
     {
         return tmat2(*this) /= rhs;
     }
 
+    // Use an instance of the ArrayProxy class to support double-indexed
+    // references to a matrix (i.e., m[1][1]).  See comments above the
+    // ArrayProxy definition for more details.
     ArrayProxy<T, 2> operator[](int index)
     {
         return ArrayProxy<T, 2>(&m_[index]);
@@ -240,12 +273,16 @@ private:
     T m_[4];
 };
 
+// Multiply a scalar and a matrix just like the member operator, but allow
+// the scalar to be the left-hand operand.
 template<typename T>
 const tmat2<T> operator*(const T& lhs, const tmat2<T>& rhs)
 {
     return tmat2<T>(rhs) * lhs;
 }
 
+// Multiply a copy of a vector and a matrix (matrix is right-hand operand).
+// Return the copy.
 template<typename T>
 const tvec2<T> operator*(const tvec2<T>& lhs, const tmat2<T>& rhs)
 {
@@ -254,6 +291,8 @@ const tvec2<T> operator*(const tvec2<T>& lhs, const tmat2<T>& rhs)
     return tvec2<T>(x,y);
 }
 
+// Multiply a copy of a vector and a matrix (matrix is left-hand operand).
+// Return the copy.
 template<typename T>
 const tvec2<T> operator*(const tmat2<T>& lhs, const tvec2<T>& rhs)
 {
@@ -262,6 +301,7 @@ const tvec2<T> operator*(const tmat2<T>& lhs, const tvec2<T>& rhs)
     return tvec2<T>(x, y);
 }
 
+// Compute the outer product of two vectors.  Return the resultant matrix.
 template<typename T>
 const tmat2<T> outer(const tvec2<T>& a, const tvec2<T>& b)
 {
@@ -273,6 +313,10 @@ const tmat2<T> outer(const tvec2<T>& a, const tvec2<T>& b)
     return product;
 }
 
+// A template class for creating, managing and operating on a 3x3 matrix
+// of any type you like (intended for built-in types, but as long as it 
+// supports the basic arithmetic and assignment operators, any type should
+// work).
 template<typename T>
 class tmat3
 {
@@ -309,6 +353,7 @@ public:
     }
     ~tmat3() {}
 
+    // Reset this to the identity matrix.
     void setIdentity()
     {
         m_[0] = 1;
@@ -322,6 +367,7 @@ public:
         m_[8] = 1;
     }
 
+    // Transpose this.  Return a reference to this.
     tmat3& transpose()
     {
         T tmp_val = m_[1];
@@ -336,6 +382,7 @@ public:
         return *this;
     }
 
+    // Compute the determinant of this and return it.
     T determinant()
     {
         tmat2<T> minor0(m_[4], m_[5], m_[7], m_[8]);
@@ -346,6 +393,10 @@ public:
                (m_[6] * minor6.determinant());
     }
 
+    // Invert this.  Return a reference to this.
+    //
+    // NOTE: If this is non-invertible, we will
+    //       throw to avoid undefined behavior.
     tmat3& inverse() throw(std::runtime_error)
     {
         T d(determinant());
@@ -374,6 +425,8 @@ public:
         return *this;       
     }
 
+    // Print the elements of the matrix to standard out.
+    // Really only useful for debug and test.
     void print() const
     {
         static const int precision(6);
@@ -403,8 +456,12 @@ public:
         std::cout << " |" << std::endl;
     }
 
+    // Allow raw data access for API calls and the like.
+    // For example, it is valid to pass a tmat3<float> into a call to
+    // the OpenGL command "glUniformMatrix3fv()".
     operator const T*() const { return &m_[0];}
 
+    // Test if 'rhs' is equal to this.
     bool operator==(const tmat3& rhs) const
     {
         return m_[0] == rhs.m_[0] &&
@@ -418,11 +475,13 @@ public:
                m_[8] == rhs.m_[8];
     }
 
+    // Test if 'rhs' is not equal to this.
     bool operator!=(const tmat3& rhs) const
     {
         return !(*this == rhs);
     }
 
+    // A direct assignment of 'rhs' to this.  Return a reference to this.
     tmat3& operator=(const tmat3& rhs)
     {
         if (this != &rhs)
@@ -440,6 +499,7 @@ public:
         return *this;
     }
 
+    // Add another matrix to this.  Return a reference to this.
     tmat3& operator+=(const tmat3& rhs)
     {
         m_[0] += rhs.m_[0];
@@ -454,11 +514,13 @@ public:
         return *this;
     }
 
+    // Add another matrix to a copy of this.  Return the copy.
     const tmat3 operator+(const tmat3& rhs)
     {
         return tmat3(*this) += rhs;
     }
 
+    // Subtract another matrix from this.  Return a reference to this.
     tmat3& operator-=(const tmat3& rhs)
     {
         m_[0] -= rhs.m_[0];
@@ -473,11 +535,13 @@ public:
         return *this;
     }
 
+    // Subtract another matrix from a copy of this.  Return the copy.
     const tmat3 operator-(const tmat3& rhs)
     {
         return tmat3(*this) -= rhs;
     }
 
+    // Multiply this by another matrix.  Return a reference to this.
     tmat3& operator*=(const tmat3& rhs)
     {
         T c0r0((m_[0] * rhs.m_[0]) + (m_[3] * rhs.m_[1]) + (m_[6] * rhs.m_[2]));
@@ -501,11 +565,13 @@ public:
         return *this;
     }
 
+    // Multiply a copy of this by another matrix.  Return the copy.
     const tmat3 operator*(const tmat3& rhs)
     {
         return tmat3(*this) *= rhs;
     }
 
+    // Multiply this by a scalar.  Return a reference to this.
     tmat3& operator*=(const T& rhs)
     {
         m_[0] *= rhs;
@@ -520,11 +586,13 @@ public:
         return *this;
     }
 
+    // Multiply a copy of this by a scalar.  Return the copy.
     const tmat3 operator*(const T& rhs)
     {
         return tmat3(*this) *= rhs;
     }
 
+    // Divide this by a scalar.  Return a reference to this.
     tmat3& operator/=(const T& rhs)
     {
         m_[0] /= rhs;
@@ -539,11 +607,15 @@ public:
         return *this;
     }
 
+    // Divide a copy of this by a scalar.  Return the copy.
     const tmat3 operator/(const T& rhs)
     {
         return tmat3(*this) /= rhs;
     }
 
+    // Use an instance of the ArrayProxy class to support double-indexed
+    // references to a matrix (i.e., m[1][1]).  See comments above the
+    // ArrayProxy definition for more details.
     ArrayProxy<T, 3> operator[](int index)
     {
         return ArrayProxy<T, 3>(&m_[index]);
@@ -557,12 +629,16 @@ private:
     T m_[9];
 };
 
+// Multiply a scalar and a matrix just like the member operator, but allow
+// the scalar to be the left-hand operand.
 template<typename T>
 const tmat3<T> operator*(const T& lhs, const tmat3<T>& rhs)
 {
     return tmat3<T>(rhs) * lhs;
 }
 
+// Multiply a copy of a vector and a matrix (matrix is right-hand operand).
+// Return the copy.
 template<typename T>
 const tvec3<T> operator*(const tvec3<T>& lhs, const tmat3<T>& rhs)
 {
@@ -572,6 +648,8 @@ const tvec3<T> operator*(const tvec3<T>& lhs, const tmat3<T>& rhs)
     return tvec3<T>(x, y, z);
 }
 
+// Multiply a copy of a vector and a matrix (matrix is left-hand operand).
+// Return the copy.
 template<typename T>
 const tvec3<T> operator*(const tmat3<T>& lhs, const tvec3<T>& rhs)
 {
@@ -581,6 +659,7 @@ const tvec3<T> operator*(const tmat3<T>& lhs, const tvec3<T>& rhs)
     return tvec3<T>(x, y, z);
 }
 
+// Compute the outer product of two vectors.  Return the resultant matrix.
 template<typename T>
 const tmat3<T> outer(const tvec3<T>& a, const tvec3<T>& b)
 {
@@ -597,6 +676,10 @@ const tmat3<T> outer(const tvec3<T>& a, const tvec3<T>& b)
     return product;
 }
 
+// A template class for creating, managing and operating on a 4x4 matrix
+// of any type you like (intended for built-in types, but as long as it 
+// supports the basic arithmetic and assignment operators, any type should
+// work).
 template<typename T>
 class tmat4
 {
@@ -626,6 +709,7 @@ public:
     }
     ~tmat4() {}
 
+    // Reset this to the identity matrix.
     void setIdentity()
     {
         m_[0] = 1;
@@ -646,6 +730,7 @@ public:
         m_[15] = 1;
     }
 
+    // Transpose this.  Return a reference to this.
     tmat4& transpose()
     {
         T tmp_val = m_[1];
@@ -669,6 +754,7 @@ public:
         return *this;
     }
 
+    // Compute the determinant of this and return it.
     T determinant()
     {
         tmat3<T> minor0(m_[5], m_[6], m_[7], m_[9], m_[10], m_[11], m_[13], m_[14], m_[15]);
@@ -681,6 +767,10 @@ public:
                (m_[12] * minor12.determinant());
     }
 
+    // Invert this.  Return a reference to this.
+    //
+    // NOTE: If this is non-invertible, we will
+    //       throw to avoid undefined behavior.
     tmat4& inverse() throw(std::runtime_error)
     {
         T d(determinant());
@@ -726,6 +816,8 @@ public:
         return *this;
     }
 
+    // Print the elements of the matrix to standard out.
+    // Really only useful for debug and test.
     void print() const
     {
         static const int precision(6);
@@ -771,8 +863,12 @@ public:
         std::cout << " |" << std::endl;
     }
 
+    // Allow raw data access for API calls and the like.
+    // For example, it is valid to pass a tmat4<float> into a call to
+    // the OpenGL command "glUniformMatrix4fv()".
     operator const T*() const { return &m_[0];}
 
+    // Test if 'rhs' is equal to this.
     bool operator==(const tmat4& rhs) const
     {
         return m_[0] == rhs.m_[0] &&
@@ -793,11 +889,13 @@ public:
                m_[15] == rhs.m_[15];
     }
 
+    // Test if 'rhs' is not equal to this.
     bool operator!=(const tmat4& rhs) const
     {
         return !(*this == rhs);
     }
 
+    // A direct assignment of 'rhs' to this.  Return a reference to this.
     tmat4& operator=(const tmat4& rhs)
     {
         if (this != &rhs)
@@ -822,6 +920,7 @@ public:
         return *this;
     }
 
+    // Add another matrix to this.  Return a reference to this.
     tmat4& operator+=(const tmat4& rhs)
     {
         m_[0] += rhs.m_[0];
@@ -843,11 +942,13 @@ public:
         return *this;
     }
 
+    // Add another matrix to a copy of this.  Return the copy.
     const tmat4 operator+(const tmat4& rhs)
     {
         return tmat4(*this) += rhs;
     }
 
+    // Subtract another matrix from this.  Return a reference to this.
     tmat4& operator-=(const tmat4& rhs)
     {
         m_[0] -= rhs.m_[0];
@@ -869,11 +970,13 @@ public:
         return *this;
     }
 
+    // Subtract another matrix from a copy of this.  Return the copy.
     const tmat4 operator-(const tmat4& rhs)
     {
         return tmat4(*this) -= rhs;
     }
 
+    // Multiply this by another matrix.  Return a reference to this.
     tmat4& operator*=(const tmat4& rhs)
     {
         T c0r0((m_[0] * rhs.m_[0]) + (m_[4] * rhs.m_[1]) + (m_[8] * rhs.m_[2]) + (m_[12] * rhs.m_[3]));
@@ -911,11 +1014,13 @@ public:
         return *this;
     }
 
+    // Multiply a copy of this by another matrix.  Return the copy.
     const tmat4 operator*(const tmat4& rhs)
     {
         return tmat4(*this) *= rhs;
     }
 
+    // Multiply this by a scalar.  Return a reference to this.
     tmat4& operator*=(const T& rhs)
     {
         m_[0] *= rhs;
@@ -937,11 +1042,13 @@ public:
         return *this;
     }
 
+    // Multiply a copy of this by a scalar.  Return the copy.
     const tmat4 operator*(const T& rhs)
     {
         return tmat4(*this) *= rhs;
     }
 
+    // Divide this by a scalar.  Return a reference to this.
     tmat4& operator/=(const T& rhs)
     {
         m_[0] /= rhs;
@@ -963,11 +1070,15 @@ public:
         return *this;
     }
 
+    // Divide a copy of this by a scalar.  Return the copy.
     const tmat4 operator/(const T& rhs)
     {
         return tmat4(*this) /= rhs;
     }
 
+    // Use an instance of the ArrayProxy class to support double-indexed
+    // references to a matrix (i.e., m[1][1]).  See comments above the
+    // ArrayProxy definition for more details.
     ArrayProxy<T, 4> operator[](int index)
     {
         return ArrayProxy<T, 4>(&m_[index]);
@@ -981,12 +1092,16 @@ private:
     T m_[16];
 };
 
+// Multiply a scalar and a matrix just like the member operator, but allow
+// the scalar to be the left-hand operand.
 template<typename T>
 const tmat4<T> operator*(const T& lhs, const tmat4<T>& rhs)
 {
     return tmat4<T>(rhs) * lhs;
 }
 
+// Multiply a copy of a vector and a matrix (matrix is right-hand operand).
+// Return the copy.
 template<typename T>
 const tvec4<T> operator*(const tvec4<T>& lhs, const tmat4<T>& rhs)
 {
@@ -997,6 +1112,8 @@ const tvec4<T> operator*(const tvec4<T>& lhs, const tmat4<T>& rhs)
     return tvec4<T>(x, y, z, w);
 }
 
+// Multiply a copy of a vector and a matrix (matrix is left-hand operand).
+// Return the copy.
 template<typename T>
 const tvec4<T> operator*(const tmat4<T>& lhs, const tvec4<T>& rhs)
 {
@@ -1007,6 +1124,7 @@ const tvec4<T> operator*(const tmat4<T>& lhs, const tvec4<T>& rhs)
     return tvec4<T>(x, y, z, w);
 }
 
+// Compute the outer product of two vectors.  Return the resultant matrix.
 template<typename T>
 const tmat4<T> outer(const tvec4<T>& a, const tvec4<T>& b)
 {
