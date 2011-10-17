@@ -32,6 +32,15 @@ Options::parseArgs(int argc, char** argv)
     int c =  getopt_long(argc, argv, "", long_options, &option_index);
     while (c != -1) 
     {
+        // getopt_long() returns '?' and prints an "unrecognized option" error
+        // to stderr if it does not recognize an option.  Just trigger
+        // the help/usage message, stop processing and get out.
+        if (c == '?')
+        {
+            show_help_ = true;
+            break;
+        }
+
         std::string optname(long_options[option_index].name);
 
         if (optname == verbose_name_)
