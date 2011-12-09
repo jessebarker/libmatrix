@@ -1,6 +1,6 @@
 CXXFLAGS = -Wall -Werror -pedantic -O3
 LIBMATRIX = libmatrix.a
-LIBSRCS = mat.cc program.cc log.cc
+LIBSRCS = mat.cc program.cc log.cc util.cc
 LIBOBJS = $(LIBSRCS:.cc=.o)
 TESTDIR = test
 LIBMATRIX_TESTS = $(TESTDIR)/libmatrix_test
@@ -19,7 +19,8 @@ default: $(LIBMATRIX) $(LIBMATRIX_TESTS) run_tests
 mat.o : mat.cc mat.h vec.h
 program.o: program.cc program.h mat.h vec.h
 log.o: log.cc log.h
-libmatrix.a : mat.o stack.h program.o log.o
+util.o: util.cc util.h
+libmatrix.a : mat.o stack.h program.o log.o util.o
 	$(AR) -r $@  $(LIBOBJS)
 
 # Tests and execution targets here.
