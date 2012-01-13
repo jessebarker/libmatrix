@@ -33,6 +33,7 @@ static const string terminal_color_normal("\033[0m");
 static const string terminal_color_red("\033[1;31m");
 static const string terminal_color_cyan("\033[36m");
 static const string terminal_color_yellow("\033[33m");
+static const string empty;
 
 static void
 print_prefixed_message(std::ostream& stream, const string& color, const string& prefix,
@@ -59,10 +60,9 @@ print_prefixed_message(std::ostream& stream, const string& color, const string& 
      */
     string start_color;
     string end_color;
-    string colon;
+    static const string colon(": ");
     if (!color.empty())
     {
-        colon = string(": ");
         start_color = color;
         if (color[0] != 0)
         {
@@ -98,11 +98,11 @@ void
 Log::info(const char *fmt, ...)
 {
     static const string infoprefix("Info");
-    static const string empty;
+    static const string& infocolor(isatty(fileno(stdout)) ? terminal_color_cyan : empty);
     va_list ap;
     va_start(ap, fmt);
     if (do_debug_)
-        print_prefixed_message(std::cout, terminal_color_cyan, infoprefix, fmt, ap);
+        print_prefixed_message(std::cout, infocolor, infoprefix, fmt, ap);
     else
         print_prefixed_message(std::cout, empty, empty, fmt, ap);
     va_end(ap);
@@ -112,11 +112,12 @@ void
 Log::debug(const char *fmt, ...)
 {
     static const string dbgprefix("Debug");
+    static const string& dbgcolor(isatty(fileno(stdout)) ? terminal_color_yellow : empty);
     if (!do_debug_)
         return;
     va_list ap;
     va_start(ap, fmt);
-    print_prefixed_message(std::cout, terminal_color_yellow, dbgprefix, fmt, ap);
+    print_prefixed_message(std::cout, dbgcolor, dbgprefix, fmt, ap);
     va_end(ap);
 }
 
@@ -124,9 +125,10 @@ void
 Log::error(const char *fmt, ...)
 {
     static const string errprefix("Error");
+    static const string& errcolor(isatty(fileno(stderr)) ? terminal_color_red : empty);
     va_list ap;
     va_start(ap, fmt);
-    print_prefixed_message(std::cerr, terminal_color_red, errprefix, fmt, ap);
+    print_prefixed_message(std::cerr, errcolor, errprefix, fmt, ap);
     va_end(ap);
 }
 
