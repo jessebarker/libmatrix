@@ -16,6 +16,7 @@
 #include "inverse_test.h"
 #include "transpose_test.h"
 #include "const_vec_test.h"
+#include "shader_source_test.h"
 
 using std::cerr;
 using std::cout;
@@ -40,6 +41,7 @@ main(int argc, char** argv)
     testVec.push_back(new MatrixTest2x2Transpose());
     testVec.push_back(new MatrixTest3x3Transpose());
     testVec.push_back(new MatrixTest4x4Transpose());
+    testVec.push_back(new ShaderSourceBasic());
 
     for (vector<MatrixTest*>::iterator testIt = testVec.begin();
          testIt != testVec.end();
