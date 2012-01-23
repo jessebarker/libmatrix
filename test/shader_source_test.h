@@ -22,4 +22,11 @@ public:
     virtual void run(const Options& options);
 };
 
+class ShaderSourceAddConstGlobal : public MatrixTest
+{
+public:
+    ShaderSourceAddConstGlobal() : MatrixTest("ShaderSource::AddConstGlobal") {}
+    virtual void run(const Options& options);
+};
+
 #endif // SHADER_SOURCE_TEST_H

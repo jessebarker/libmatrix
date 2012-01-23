@@ -1,3 +1,4 @@
+const vec4 ConstantColor = vec4(1.000000, 1.000000, 1.000000, 1.000000);
 attribute vec3 position;
 
 uniform mat4 modelview;
