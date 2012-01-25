@@ -161,7 +161,4 @@ private:
     bool valid_;
 };
 
-// Handy utility for extracting shader source from a named file
-bool gotSource(const std::string& filename, std::string& sourceOut);
-
 #endif // PROGRAM_H_
