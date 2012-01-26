@@ -14,7 +14,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include <GL/glew.h>
+#include "gl-if.h"
 #include "program.h"
 
 using std::string;
