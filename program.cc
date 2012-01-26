@@ -14,7 +14,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include <GL/glew.h>
+#include "gl-if.h"
 #include "program.h"
 
 using std::string;
@@ -22,27 +22,6 @@ using LibMatrix::mat4;
 using LibMatrix::vec2;
 using LibMatrix::vec3;
 using LibMatrix::vec4;
-
-bool
-gotSource(const string& filename, string& source)
-{
-    using std::ifstream;
-    ifstream inputFile(filename.c_str());
-    if (!inputFile)
-    {
-        std::cerr << "Failed to open \"" << filename << "\"" << std::endl;
-        return false;
-    }
-
-    string curLine;
-    while (getline(inputFile, curLine))
-    {
-        source += curLine;
-        source += '\n';
-    }
-
-    return true;
-}
 
 Shader::Shader(unsigned int type, const string& source) :
     handle_(0),
