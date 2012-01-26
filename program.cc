@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2011 Linaro Limited
+// Copyright (c) 2011-2012 Linaro Limited
 //
 // All rights reserved. This program and the accompanying materials
 // are made available under the terms of the MIT License which accompanies
