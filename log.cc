@@ -67,10 +67,7 @@ print_prefixed_message(std::ostream& stream, const string& color, const string& 
         if (!color.empty())
         {
             start_color = color;
-            if (color[0] != 0)
-            {
-                end_color = terminal_color_normal;
-            }
+            end_color = terminal_color_normal;
         }
         linePrefix = start_color + prefix + end_color + colon;
     }
