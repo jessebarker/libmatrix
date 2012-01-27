@@ -151,7 +151,7 @@ Log::info(const char *fmt, ...)
     va_start(ap, fmt);
     __android_log_vprint(ANDROID_LOG_INFO, appname.c_str(), fmt, ap);
     va_end(ap);
-}q
+}
 
 void
 Log::debug(const char *fmt, ...)
