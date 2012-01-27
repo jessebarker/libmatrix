@@ -153,7 +153,7 @@ Log::info(const char *fmt, ...)
 void
 Log::debug(const char *fmt, ...)
 {
-    if (!Options::show_debug)
+    if (!do_debug_)
         return;
     va_list ap;
     va_start(ap, fmt);
