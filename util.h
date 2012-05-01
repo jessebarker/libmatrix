@@ -24,7 +24,23 @@
 #endif
 
 struct Util {
+    /**
+     * split() - Splits a string into elements separated by a delimiter
+     *
+     * @s:     the string to split
+     * @delim: the delimiter to use
+     * @elems: the string vector to populate
+     *
+     * Splits @s into a vector of string elements, delimited by @delim, that
+     * get returned in @elems.  The handling of @delim allows for spaces on
+     * either side of the delimiter or even multiple consecutive delimiters
+     * with no elements between.  As long as @s is non-empty, there will be
+     * at least one element in @elems.
+     */
     static void split(const std::string &s, char delim, std::vector<std::string> &elems);
+    /**
+     * get_timestamp_us() - Returns the current time in microseconds
+     */
     static uint64_t get_timestamp_us();
     static std::istream *get_resource(const std::string &path);
     static void list_files(const std::string& dirName, std::vector<std::string>& fileVec);
@@ -44,7 +60,7 @@ struct Util {
     fromString(const std::string& asString)
     {
         std::stringstream ss(asString);
-        T retVal;
+        T retVal = T();
         ss >> retVal;
         return retVal;
     }
