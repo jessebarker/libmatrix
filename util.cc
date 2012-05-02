@@ -26,14 +26,26 @@ using std::string;
 using std::vector;
 
 void
-Util::split(const string& src, char delim, vector<string>& elementVec)
+Util::split(const string& src, char delim, vector<string>& elementVec, bool fuzzy)
 {
+    // Trivial rejection
     if (src.empty())
     {
         return;
     }
-    // Initialize our delimiter string based upon the caller's plus a space
-    // to allow for more flexibility.
+
+    // Simple case: we want to enforce the value of 'delim' strictly 
+    if (!fuzzy)
+    {
+        std::stringstream ss(src);
+        string item;
+        while(std::getline(ss, item, delim))
+            elementVec.push_back(item);
+        return;
+    }
+
+    // Fuzzy case: Initialize our delimiter string based upon the caller's plus
+    // a space to allow for more flexibility.
     string delimiter(" ");
     delimiter += delim;
     // Starting index into the string of the first token (by definition, if
