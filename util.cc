@@ -25,25 +25,18 @@
 using std::string;
 using std::vector;
 
-void
-Util::split(const string& src, char delim, vector<string>& elementVec, bool fuzzy)
+static void
+split_normal(const string& src, char delim, vector<string>& elementVec)
 {
-    // Trivial rejection
-    if (src.empty())
-    {
-        return;
-    }
+    std::stringstream ss(src);
+    string item;
+    while(std::getline(ss, item, delim))
+        elementVec.push_back(item);
+}
 
-    // Simple case: we want to enforce the value of 'delim' strictly 
-    if (!fuzzy)
-    {
-        std::stringstream ss(src);
-        string item;
-        while(std::getline(ss, item, delim))
-            elementVec.push_back(item);
-        return;
-    }
-
+static void
+split_fuzzy(const string& src, char delim, vector<string>& elementVec)
+{
     // Fuzzy case: Initialize our delimiter string based upon the caller's plus
     // a space to allow for more flexibility.
     string delimiter(" ");
@@ -74,6 +67,27 @@ Util::split(const string& src, char delim, vector<string>& elementVec, bool fuzz
     // Regardless of whether we initially had one element or many, 'str' now
     // only contains one.
     elementVec.push_back(str);
+}
+
+void
+Util::split(const string& src, char delim, vector<string>& elementVec,
+            Util::SplitMode mode)
+{
+    // Trivial rejection
+    if (src.empty())
+    {
+        return;
+    }
+
+    switch (mode)
+    {
+        case Util::SplitModeNormal:
+            return split_normal(src, delim, elementVec);
+        case Util::SplitModeFuzzy:
+            return split_fuzzy(src, delim, elementVec);
+        default:
+            break;
+    }
 }
 
 uint64_t
