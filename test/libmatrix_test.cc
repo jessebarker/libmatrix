@@ -17,6 +17,7 @@
 #include "transpose_test.h"
 #include "const_vec_test.h"
 #include "shader_source_test.h"
+#include "util_split_test.h"
 
 using std::cerr;
 using std::cout;
@@ -42,6 +43,7 @@ main(int argc, char** argv)
     testVec.push_back(new MatrixTest3x3Transpose());
     testVec.push_back(new MatrixTest4x4Transpose());
     testVec.push_back(new ShaderSourceBasic());
+    testVec.push_back(new UtilSplitTestNormal());
 
     for (vector<MatrixTest*>::iterator testIt = testVec.begin();
          testIt != testVec.end();
