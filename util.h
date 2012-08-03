@@ -31,7 +31,9 @@ struct Util {
         /** Normal split operation */
         SplitModeNormal,
         /** Allow for spaces and multiple consecutive occurences of the delimiter */
-        SplitModeFuzzy
+        SplitModeFuzzy,
+        /** Take into account bash-like quoting and escaping rules */
+        SplitModeQuoted
     };
 
     /**

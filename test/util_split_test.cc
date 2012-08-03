@@ -112,3 +112,69 @@ UtilSplitTestNormal::run(const Options& options)
 
     pass_ = true;
 }
+
+void
+UtilSplitTestQuoted::run(const Options& options)
+{
+    const string test1("abc \"def' ghi\" klm\\ nop -b qr:title='123 \"456'");
+    const string test2("abc: def='1:2:3:'ghi : \":jk\"");
+    vector<string> expected1;
+    vector<string> expected2;
+    vector<string> results;
+
+    expected1.push_back("abc");
+    expected1.push_back("def' ghi");
+    expected1.push_back("klm nop");
+    expected1.push_back("-b");
+    expected1.push_back("qr:title=123 \"456");
+
+    expected2.push_back("abc");
+    expected2.push_back(" def=1:2:3:ghi ");
+    expected2.push_back(" :jk");
+
+    if (options.beVerbose())
+    {
+        cout << "Testing string \"" << test1 << "\"" << endl;
+    }
+
+    Util::split(test1, ' ', results, Util::SplitModeQuoted);
+
+    if (options.beVerbose())
+    {
+        cout << "Split result: ";
+        printVector(results);
+        cout << endl << "Expected: ";
+        printVector(expected1);
+        cout << endl;
+    }
+
+    if (!areVectorsEqual(results, expected1))
+    {
+        return;
+    }
+
+    results.clear();
+
+    if (options.beVerbose())
+    {
+        cout << "Testing string \"" << test2 << "\"" << endl;
+    }
+
+    Util::split(test2, ':', results, Util::SplitModeQuoted);
+
+    if (options.beVerbose())
+    {
+        cout << "Split result: ";
+        printVector(results);
+        cout << endl << "Expected: ";
+        printVector(expected2);
+        cout << endl;
+    }
+
+    if (!areVectorsEqual(results, expected2))
+    {
+        return;
+    }
+
+    pass_ = true;
+}

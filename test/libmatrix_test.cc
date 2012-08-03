@@ -44,6 +44,7 @@ main(int argc, char** argv)
     testVec.push_back(new MatrixTest4x4Transpose());
     testVec.push_back(new ShaderSourceBasic());
     testVec.push_back(new UtilSplitTestNormal());
+    testVec.push_back(new UtilSplitTestQuoted());
 
     for (vector<MatrixTest*>::iterator testIt = testVec.begin();
          testIt != testVec.end();

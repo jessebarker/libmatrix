@@ -21,4 +21,11 @@ public:
     UtilSplitTestNormal() : MatrixTest("Util::split::normal") {}
     virtual void run(const Options& options);
 };
+
+class UtilSplitTestQuoted : public MatrixTest
+{
+public:
+    UtilSplitTestQuoted() : MatrixTest("Util::split::quoted") {}
+    virtual void run(const Options& options);
+};
 #endif // UTIL_SPLIT_TEST_H_
