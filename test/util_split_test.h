@@ -7,7 +7,7 @@
 // http://www.opensource.org/licenses/mit-license.php
 //
 // Contributors:
-//     Jesse Barker - original implementation.
+//     Alexandros Frantzis - original implementation.
 //
 #ifndef UTIL_SPLIT_TEST_H_
 #define UTIL_SPLIT_TEST_H_

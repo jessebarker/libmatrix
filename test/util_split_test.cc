@@ -7,7 +7,7 @@
 // http://www.opensource.org/licenses/mit-license.php
 //
 // Contributors:
-//     Jesse Barker - original implementation.
+//     Alexandros Frantzis - original implementation.
 //
 #include <iostream>
 #include <string>

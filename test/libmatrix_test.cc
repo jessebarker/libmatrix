@@ -8,6 +8,7 @@
 //
 // Contributors:
 //     Jesse Barker - original implementation.
+//     Alexandros Frantzis - Util::split tests
 //
 #include <iostream>
 #include <string>
